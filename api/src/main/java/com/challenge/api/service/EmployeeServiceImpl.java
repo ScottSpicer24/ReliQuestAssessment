@@ -15,12 +15,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-
+    // hash map to store employees that can be queried via uuid
+    // concurrent HM to deal with concurrency
     private final Map<UUID, Employee> employees = new ConcurrentHashMap<>();
 
     public EmployeeServiceImpl() {
-        // Optionally seed a couple of mock employees
-        EmployeeImpl alice = new EmployeeImpl(
+        // mock employees
+        EmployeeImpl scott = new EmployeeImpl(
                 UUID.randomUUID(),
                 "Scott",
                 "Spicer",
@@ -30,9 +31,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 "scott.spicer@proton.me",
                 Instant.now(),
                 null);
-        employees.put(alice.getUuid(), alice);
+        employees.put(scott.getUuid(), scott);
 
-        EmployeeImpl bob = new EmployeeImpl(
+        EmployeeImpl john = new EmployeeImpl(
                 UUID.randomUUID(),
                 "John",
                 "Doe",
@@ -42,29 +43,34 @@ public class EmployeeServiceImpl implements EmployeeService {
                 "John.Doe@gmail.com",
                 Instant.now(),
                 null);
-        employees.put(bob.getUuid(), bob);
+        employees.put(john.getUuid(), john);
     }
 
+    // return employees
     @Override
     public List<Employee> getAllEmployees() {
         return new ArrayList<>(employees.values());
     }
 
+    // Get new employee
     @Override
     public Employee getEmployeeByUuid(UUID uuid) {
-        Employee employee = employees.get(uuid);
+        Employee employee = employees.get(uuid); // pull from map via uuid
         if (employee == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee with UUID %s not found".formatted(uuid));
         }
         return employee;
     }
 
+    // Create an new employee
     @Override
     public Employee createEmployee(CreateEmployeeRequest request) {
+        // check for empty request
         if (request == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request body must not be null");
         }
 
+        // gen info and pull rest from request, create employee
         UUID uuid = UUID.randomUUID();
         EmployeeImpl employee = new EmployeeImpl(
                 uuid,
@@ -77,6 +83,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 Instant.now(),
                 null);
 
+        // Put in concurrent hashmap
         employees.put(employee.getUuid(), employee);
         return employee;
     }

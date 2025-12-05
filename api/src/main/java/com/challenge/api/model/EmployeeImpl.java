@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class EmployeeImpl implements Employee {
-
+    // Variables
     private UUID uuid;
     private String firstName;
     private String lastName;
@@ -17,6 +17,7 @@ public class EmployeeImpl implements Employee {
     private Instant contractHireDate;
     private Instant contractTerminationDate;
 
+    // Constructer
     public EmployeeImpl(
             UUID uuid,
             String firstName,
@@ -39,6 +40,7 @@ public class EmployeeImpl implements Employee {
         this.contractTerminationDate = contractTerminationDate;
     }
 
+    // Helper
     private String buildFullName(String firstName, String lastName) {
         if (firstName == null && lastName == null) {
             return null;
@@ -50,6 +52,7 @@ public class EmployeeImpl implements Employee {
         return firstName + " " + lastName;
     }
 
+    // Getters and setters
     @Override
     public UUID getUuid() {
         return uuid;

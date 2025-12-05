@@ -4,7 +4,7 @@ package com.challenge.api.model.dto;
  * Request body payload used when creating a new Employee.
  */
 public class CreateEmployeeRequest {
-
+    // Variables
     private String firstName;
     private String lastName;
     private Integer salary;
@@ -12,8 +12,10 @@ public class CreateEmployeeRequest {
     private String jobTitle;
     private String email;
 
+    // empty constructor
     public CreateEmployeeRequest() {}
 
+    // Getteres and setters
     public String getFirstName() {
         return firstName;
     }
